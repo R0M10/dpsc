@@ -1,0 +1,26 @@
+# Зависимости
+node_modules/
+vendor/
+
+# Сборка
+dist/
+build/
+out/
+
+# Логи
+*.log
+npm-debug.log*
+
+# Переменные окружения и секреты
+.env
+.env.local
+*.key
+
+# ОС
+.DS_Store
+Thumbs.db
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
