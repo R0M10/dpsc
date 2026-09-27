@@ -65,6 +65,15 @@ body {
   min-height: 1em;
 }
 
+/* Тип навыка в тултипе радара */
+.radar-tooltip__type {
+  font-size: .72rem;
+  color: #a0a8b8;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-top: -.15rem;
+}
+
 /* ---------- Тултип радара ---------- */
 .radar-tooltip {
   position: fixed;
@@ -322,6 +331,13 @@ body {
   color: #222;
   line-height: 1.2;
 }
+
+/* Уровень в сводке — цвет по уровню */
+.lvl-trainee { color: #8a8a8a; }
+.lvl-junior  { color: #6b8f3a; }
+.lvl-middle  { color: #2f6bff; }
+.lvl-senior  { color: #c47f00; }
+.lvl-expert  { color: #c0392b; }
 
 .roles-summary__metric-label {
   font-size: .78rem;

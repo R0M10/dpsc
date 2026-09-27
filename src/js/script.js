@@ -15,25 +15,98 @@ const roles = {
 
 const ALL_ROLES = Object.keys(roles).filter(k => k !== "all");
 
+/* ========== Реестр типов навыков ==========
+   Здесь описано, ЧЕМ один навык отличается от другого:
+     - defaultRoles: какие роли подставлять, если у листа не заданы явно
+     - rubric:      какая рубрика оценки применяется (пока только справочно)
+     - fields:      какие характеристики ожидаются в meta (справочно)
+     - display:     как отображать узел в UI
+*/
+const skillTypes = {
+  generic: {
+    label: "Навык",
+    defaultRoles: [],
+    rubric: "common",
+    fields: [],
+    display: { showBadge: true },
+  },
+  category: {
+    label: "Категория",
+    defaultRoles: [],
+    rubric: "common",
+    fields: [],
+    display: { showBadge: true },
+  },
+  language: {
+    label: "Язык программирования",
+    defaultRoles: ["backend"],
+    rubric: "code",
+    fields: ["paradigms", "yearsUsed"],
+    display: { showBadge: true },
+  },
+  library: {
+    label: "Библиотека",
+    defaultRoles: ["backend"],
+    rubric: "library",
+    fields: ["version", "typicalUse"],
+    display: { showBadge: false },
+  },
+  tool: {
+    label: "Инструмент",
+    defaultRoles: [],
+    rubric: "tool",
+    fields: [],
+    display: { showBadge: true },
+  },
+  concept: {
+    label: "Концепт",
+    defaultRoles: [],
+    rubric: "concept",
+    fields: [],
+    display: { showBadge: false },
+  },
+  softskill: {
+    label: "Soft skill",
+    defaultRoles: ALL_ROLES,
+    rubric: "soft",
+    fields: ["contexts"],
+    display: { showBadge: false },
+  },
+  framework: {
+    label: "Фреймворк",
+    defaultRoles: ["backend"],
+    rubric: "library",
+    fields: ["version", "stack"],
+    display: { showBadge: true },
+  },
+};
+
 /* ========== Данные ==========
-   Лист:   { name, rating: 0..10, roles: [...] }
-   Ветка:  { name, children: [...], category?: "hard"|"soft", short?: "..." }
-   rating и min у веток считаются автоматически. */
+   Лист:   { name, rating, roles?, type?, meta?, children? }
+   Ветка:  { name, children, category?, short?, type?, meta? }
+   
+   type — ключ из skillTypes. Если не задан, наследуется от родителя,
+   а у корня падает в "generic".
+   roles — если не заданы, берутся из типа (defaultRoles). */
 const skillsData = [
   /* ---------- HARD ---------- */
   {
     name: "Веб-разработка",
     short: "Веб",
     category: "hard",
+    type: "category",
     children: [
-      { name: "HTML", rating: 9, roles: ["frontend", "fullstack", "designer"] },
-      { name: "CSS",  rating: 7, roles: ["frontend", "fullstack", "designer"] },
+      { name: "HTML", rating: 3, type: "tool", roles: ["frontend", "fullstack", "designer"] },
+      { name: "CSS",  rating: 1, type: "tool", roles: ["frontend", "fullstack", "designer"] },
+      { name: "PHP", rating: 3, type: "language", roles: ["fullstack", "backend"]},
       {
         name: "JavaScript",
+        type: "language",
+        meta: { paradigms: ["OOP", "FP"], yearsUsed: 3 },
         children: [
-          { name: "Основы",    rating: 6, roles: ["frontend", "fullstack"] },
-          { name: "DOM",       rating: 5, roles: ["frontend"] },
-          { name: "Fetch/API", rating: 4, roles: ["frontend", "backend", "fullstack"] },
+          { name: "Основы",    rating: 3, roles: ["frontend", "fullstack"] },
+          { name: "DOM",       rating: 2, type: "concept", roles: ["frontend"] },
+          { name: "Fetch/API", rating: 0, type: "concept", roles: ["frontend", "backend", "fullstack"] },
         ],
       },
     ],
@@ -42,155 +115,196 @@ const skillsData = [
     name: "Программирование",
     short: "Код",
     category: "hard",
+    type: "category",
     children: [
       {
         name: "Python",
+        type: "language",
+        meta: { paradigms: ["OOP", "FP"], yearsUsed: 3 },
         children: [
           {
             name: "Язык",
+            type: "category",
             children: [
-              { name: "Типы и операции", rating: 8.5, roles: ["backend", "analyst", "data", "devops"] },
-              { name: "Синтаксис",       rating: 8.0, roles: ["backend", "analyst", "data", "devops"] },
-              { name: "Функции",         rating: 7.0, roles: ["backend", "analyst", "data"] },
-              { name: "ООП",             rating: 6.0, roles: ["backend", "data"] },
-              { name: "Асинхронность",   rating: 3.0, roles: ["backend"] },
+              { name: "Типы и операции", rating: 8.5, type: "concept", roles: ["backend", "analyst", "data", "devops"] },
+              { name: "Синтаксис",       rating: 8.0, type: "concept", roles: ["backend", "analyst", "data", "devops"] },
+              { name: "Функции",         rating: 7.0, type: "concept", roles: ["backend", "analyst", "data"] },
+              { name: "ООП",             rating: 6.0, type: "concept", roles: ["backend", "data"] },
+              { name: "Асинхронность",   rating: 2.0, type: "concept", roles: ["backend"] },
             ],
           },
           {
             name: "Инструменты",
+            type: "category",
             children: [
-              { name: "venv / poetry", rating: 7.0, roles: ["backend", "devops"] },
-              { name: "pytest",        rating: 5.0, roles: ["backend"] },
-              { name: "mypy / ruff",   rating: 3.0, roles: ["backend"] },
+              { name: "venv / poetry", rating: 2.0, type: "tool", roles: ["backend", "devops"] },
+              { name: "pytest",        rating: 0.0, type: "tool", roles: ["backend"] },
+              { name: "mypy / ruff",   rating: 0.0, type: "tool", roles: ["backend"] },
             ],
           },
           {
             name: "Библиотеки",
+            type: "category",
             children: [
-              { name: "pandas",     rating: 7.0, roles: ["analyst", "data"] },
-              { name: "numpy",      rating: 6.0, roles: ["analyst", "data"] },
-              { name: "matplotlib", rating: 5.0, roles: ["analyst", "data"] },
+              { name: "pandas",     rating: 7.0, type: "library", roles: ["analyst", "data"] },
+              { name: "numpy",      rating: 5.0, type: "library", roles: ["analyst", "data"] },
+              { name: "matplotlib", rating: 4.0, type: "library", roles: ["analyst", "data"] },
+              { name: "tkinter", rating: 3.0, type: 'library', roles: ["analyst", "data","designer"]},
             ],
           },
         ],
       },
-      { name: "Django", rating: 4, roles: ["backend", "fullstack"] },
-      { name: "Git",    rating: 6, roles: ["frontend", "backend", "devops", "fullstack"] },
+      { name: "Django", rating: 2, type: "framework", roles: ["backend", "fullstack",] },
+      { name: "Git",    rating: 3, type: "tool",    roles: ["frontend", "backend", "devops", "fullstack"] },
     ],
   },
   {
     name: "Офисный пакет",
     short: "Офис",
     category: "hard",
+    type: "category",
     children: [
-      { name: "Excel",      rating: 10, roles: ["office", "analyst", "pm"] },
-      { name: "Word",       rating: 9,  roles: ["office", "pm"] },
-      { name: "PowerPoint", rating: 8,  roles: ["office", "pm"] },
+      { name: "Excel",      rating: 10, type: "tool", roles: ["office", "analyst", "pm"] },
+      { name: "Word",       rating: 9,  type: "tool", roles: ["office", "pm"] },
+      { name: "PowerPoint", rating: 7,  type: "tool", roles: ["office", "pm"] },
+      { name: "Project", rating: 4, type: "tool", roles: ["office","pm"]},
+      { name: "Power Query", rating: 7.5, type: "tool", roles: ["office", "data"]},
     ],
   },
   {
     name: "Аналитика",
     short: "Data",
     category: "hard",
+    type: "category",
     children: [
-      { name: "SQL",     rating: 6, roles: ["analyst", "backend", "data"] },
-      { name: "Pandas",  rating: 4, roles: ["analyst", "data"] },
-      { name: "Tableau", rating: 3, roles: ["analyst", "data", "pm"] },
+      { name: "SQL",     rating: 7, type: "language", roles: ["analyst", "backend", "data"] },
+      { name: "Pandas",  rating: 4, type: "library",  roles: ["analyst", "data"] },
+      { name: "PowerBI", rating: 5, type: "tool",     roles: ["analyst", "data", "pm"] },
+      { name: "BPMN", rating: 4.5, type: "tool", roles: ["analyst", "data", "pm"] }, // BPMN (Business Process Model and Notation) 
+      { name: "UML", rating: 2.0, type: "tool", roles: ["analyst", "data", "pm"] }, // UML (Unified Modeling Language) 
+      { name: "EPC", rating: 0.1, type: "tool", roles: ["analyst", "data", "pm"] }, // Event-driven Process Chain (событийная цепочка процессов)
     ],
   },
   {
     name: "Инфраструктура",
     short: "Инфра",
     category: "hard",
+    type: "category",
     children: [
-      { name: "Docker",  rating: 5, roles: ["devops", "backend"] },
-      { name: "CI/CD",   rating: 4, roles: ["devops"] },
-      { name: "Linux",   rating: 6, roles: ["devops", "backend"] },
+      { name: "Docker", rating: 2, type: "tool", roles: ["devops", "backend"] },
+      { name: "CI/CD",  rating: 1, type: "tool", roles: ["devops"] },
+      { name: "Linux",  rating: 6, type: "tool", roles: ["devops", "backend"] },
+      { name: "Kubernetes", rating:1, type: "tool", roles: ["devops", "backend"]}
     ],
   },
 
-  /* ---------- SOFT ---------- */
+  /* ---------- SOFT ----------
+     Тип задаётся один раз на верхнем уровне — дети наследуют. */
   {
     name: "Эмоциональный интеллект",
     short: "EQ",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Самосознание",        rating: 7, roles: ALL_ROLES },
-      { name: "Эмпатия",             rating: 8, roles: ALL_ROLES },
-      { name: "Управление эмоциями", rating: 6, roles: ALL_ROLES },
+      { name: "Самосознание",        rating: 8 },
+      { name: "Эмпатия",             rating: 8.5 },
+      { name: "Управление эмоциями", rating: 7 },
     ],
   },
   {
     name: "Лидерство",
     short: "Лидер",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Делегирование",     rating: 5, roles: ["pm", "devops"] },
-      { name: "Мотивация команды", rating: 6, roles: ["pm"] },
-      { name: "Принятие решений",  rating: 7, roles: ALL_ROLES },
+      { name: "Делегирование",     rating: 5.9 },
+      { name: "Мотивация команды", rating: 7 },
+      { name: "Принятие решений",  rating: 7 },
     ],
   },
   {
     name: "Публичная презентация",
     short: "Речь",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Структура выступления", rating: 7, roles: ALL_ROLES },
-      { name: "Работа с аудиторией",   rating: 6, roles: ALL_ROLES },
-      { name: "Визуализация",          rating: 7, roles: ["designer", "pm"] },
+      { name: "Структура выступления", rating: 8 },
+      { name: "Работа с аудиторией",   rating: 8 },
+      { name: "Визуализация",          rating: 7 },
     ],
   },
   {
     name: "Креативность",
     short: "Креатив",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Генерация идей",         rating: 8, roles: ALL_ROLES },
-      { name: "Нестандартное мышление", rating: 7, roles: ALL_ROLES },
-      { name: "Дизайн-мышление",        rating: 5, roles: ["designer"] },
+      { name: "Генерация идей",         rating: 8 },
+      { name: "Нестандартное мышление", rating: 8.5 },
+      { name: "Дизайн-мышление",        rating: 5 },
     ],
   },
   {
     name: "Тайм-менеджмент",
     short: "Время",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Планирование",        rating: 7, roles: ALL_ROLES },
-      { name: "Приоритизация",       rating: 6, roles: ALL_ROLES },
-      { name: "Управление задачами", rating: 7, roles: ALL_ROLES },
+      { name: "Планирование",        rating: 7 },
+      { name: "Приоритизация",       rating: 6 },
+      { name: "Управление задачами", rating: 7 },
     ],
   },
   {
     name: "Критическое мышление",
     short: "Крит.",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Анализ",            rating: 8, roles: ALL_ROLES },
-      { name: "Логика",            rating: 7, roles: ALL_ROLES },
-      { name: "Оценка источников", rating: 6, roles: ALL_ROLES },
+      { name: "Анализ",            rating: 8 },
+      { name: "Логика",            rating: 7 },
+      { name: "Скорость мышления", rating: 7.8},
+      { name: "Оценка источников", rating: 6 },
     ],
   },
   {
     name: "Переговоры",
     short: "Перег.",
     category: "soft",
+    type: "softskill",
     children: [
-      { name: "Подготовка",         rating: 6, roles: ALL_ROLES },
-      { name: "Аргументация",       rating: 7, roles: ALL_ROLES },
-      { name: "Поиск компромиссов", rating: 8, roles: ALL_ROLES },
+      { name: "Подготовка",         rating: 6 },
+      { name: "Аргументация",       rating: 6 },
+      { name: "Поиск компромиссов", rating: 7 },
     ],
   },
 ];
 
 /* ========== Настройки ========== */
 const TOP_N = 8;
-const WEAK_THRESHOLD = 1.5;  // на сколько min должен быть ниже среднего, чтобы показать бейдж
+const WEAK_THRESHOLD = 1.5;
 
 /* ========== Состояние ========== */
 const activeRoles   = new Set();
 const expandedNodes = new Set();
 let   rolesExpanded = false;
 let   searchQuery   = "";
+
+/* ========== Разрешение типа ==========
+   Возвращает НОВЫЙ объект: копия node + подставленные roles/meta
+   + поля _type и _typeDef. Оригинал не мутируется. */
+function resolveSkill(node, parentType = null) {
+  const typeKey = node.type || parentType || "generic";
+  const typeDef = skillTypes[typeKey] || skillTypes.generic;
+
+  return {
+    ...node,
+    roles: node.roles ?? typeDef.defaultRoles ?? [],
+    meta:  node.meta  ?? {},
+    _type:    typeKey,
+    _typeDef: typeDef,
+  };
+}
 
 /* ========== Логика ========== */
 
@@ -208,22 +322,31 @@ function isLeafVisible(node) {
   return false;
 }
 
-/* Возвращает { visible, rating, min, children } — рекурсивно */
-function evaluate(node) {
+/* Рекурсивно обходит дерево. Внутри сам вызывает resolveSkill,
+   чтобы дети получили унаследованный тип. */
+function evaluate(node, parentType = null) {
+  const resolved = resolveSkill(node, parentType);
+  const typeKey  = resolved._type;
+
   // Лист
   if (!node.children || !node.children.length) {
-    const visible = isLeafVisible(node);
-    const value   = visible ? (node.rating ?? 0) : 0;
+    const visible = isLeafVisible(resolved);
+    const value   = visible ? (resolved.rating ?? 0) : 0;
     return {
       visible,
       rating: value,
-      min:    value,     // у листа min === rating
+      min:    value,
+      isWeak: false,
       children: [],
+      _type:    typeKey,
+      _typeDef: resolved._typeDef,
+      _meta:    resolved.meta,
+      _roles:   resolved.roles,
     };
   }
 
   // Ветка
-  const evaluatedChildren = node.children.map(evaluate);
+  const evaluatedChildren = node.children.map(c => evaluate(c, typeKey));
   const visibleChildren   = evaluatedChildren.filter(c => c.visible);
 
   const visible = visibleChildren.length > 0;
@@ -234,38 +357,71 @@ function evaluate(node) {
     ? Math.min(...visibleChildren.map(c => c.min))
     : 0;
 
-  return { visible, rating, min, children: evaluatedChildren };
+  return {
+    visible,
+    rating,
+    min,
+    isWeak: false,
+    children: evaluatedChildren,
+    _type:    typeKey,
+    _typeDef: resolved._typeDef,
+    _meta:    resolved.meta,
+    _roles:   resolved.roles,
+  };
+}
+
+/* Проходит по дереву сверху вниз и помечает ЛИСТЬЯ, чей рейтинг
+   заметно ниже среднего у их непосредственной родительской ветки.
+   Так бейдж «слабое звено» появляется у самого виновника,
+   а не у родителя. */
+function markWeakLeaves(nodes, parentAvg = null) {
+  nodes.forEach(node => {
+    if (!node.visible) return;
+
+    if (node.children && node.children.length) {
+      // Ветка — идём внутрь с её средним
+      markWeakLeaves(node.children, node.rating);
+      return;
+    }
+
+    // Лист — сравниваем со средним ближайшего родителя
+    if (parentAvg != null && node.rating < parentAvg - WEAK_THRESHOLD) {
+      node.isWeak = true;
+    }
+  });
 }
 
 function collectVisibleLeaves() {
   const result = [];
-  function walk(node) {
+  function walk(node, parentType = null) {
+    const resolved = resolveSkill(node, parentType);
     if (node.children && node.children.length) {
-      node.children.forEach(walk);
+      node.children.forEach(c => walk(c, resolved._type));
       return;
     }
-    if (isLeafVisible(node)) result.push(node);
+    if (isLeafVisible(resolved)) result.push(resolved);
   }
-  skillsData.forEach(walk);
+  skillsData.forEach(g => walk(g));
   return result;
 }
 
 function computeRoleScores() {
   const acc = {};
-  function walk(node) {
+  function walk(node, parentType = null) {
+    const resolved = resolveSkill(node, parentType);
     if (node.children && node.children.length) {
-      node.children.forEach(walk);
+      node.children.forEach(c => walk(c, resolved._type));
       return;
     }
-    if (Array.isArray(node.roles)) {
-      node.roles.forEach(r => {
+    if (Array.isArray(resolved.roles)) {
+      resolved.roles.forEach(r => {
         if (!acc[r]) acc[r] = { sum: 0, count: 0 };
-        acc[r].sum   += node.rating ?? 0;
+        acc[r].sum   += resolved.rating ?? 0;
         acc[r].count += 1;
       });
     }
   }
-  skillsData.forEach(walk);
+  skillsData.forEach(g => walk(g));
 
   const scores = {};
   for (const r in acc) scores[r] = acc[r].sum / acc[r].count;
@@ -305,9 +461,7 @@ function drawRadarOn(canvas, items) {
   const size = canvas.clientWidth;
 
   if (n < 3 || !size) {
-    if (canvas.getContext) {
-      canvas.width = canvas.height = 0;
-    }
+    if (canvas.getContext) canvas.width = canvas.height = 0;
     canvas._radar = null;
     return;
   }
@@ -325,7 +479,6 @@ function drawRadarOn(canvas, items) {
 
   const angleFor = i => (Math.PI * 2 * i / n) - Math.PI / 2;
 
-  // Сетка
   ctx.strokeStyle = "#e6e8eb";
   ctx.lineWidth = 1;
   for (let lvl = 1; lvl <= 5; lvl++) {
@@ -341,7 +494,6 @@ function drawRadarOn(canvas, items) {
     ctx.stroke();
   }
 
-  // Оси
   ctx.beginPath();
   for (let i = 0; i < n; i++) {
     const a = angleFor(i);
@@ -350,7 +502,6 @@ function drawRadarOn(canvas, items) {
   }
   ctx.stroke();
 
-  // Значения
   const values = items.map(it => it.eval.visible ? it.eval.rating / 10 : 0);
 
   ctx.beginPath();
@@ -369,7 +520,6 @@ function drawRadarOn(canvas, items) {
   ctx.lineWidth   = 2;
   ctx.stroke();
 
-  // Точки
   values.forEach((v, i) => {
     const a = angleFor(i);
     const r = R * v;
@@ -381,7 +531,6 @@ function drawRadarOn(canvas, items) {
     ctx.fill();
   });
 
-  // Подписи осей
   ctx.fillStyle    = "#555";
   ctx.font         = "600 10px system-ui, sans-serif";
   ctx.textAlign    = "center";
@@ -469,9 +618,11 @@ function attachRadarTooltips(canvas) {
     const { item } = found;
     const rating10    = item.eval.visible ? item.eval.rating : 0;
     const ratingStars = ratingToStars(rating10);
+    const typeLabel   = item.eval._typeDef?.label ?? "";
 
     el.innerHTML = `
       <span class="radar-tooltip__name">${item.group.name}</span>
+      ${typeLabel ? `<span class="radar-tooltip__type">${typeLabel}</span>` : ""}
       <span class="radar-tooltip__rating">
         <span class="radar-tooltip__num">${rating10.toFixed(1)}</span>
         <span class="radar-tooltip__stars">
@@ -500,7 +651,7 @@ function attachRadarTooltips(canvas) {
   });
 }
 
-/* ========== Рендер навыков (аккордеон + слабые места) ========== */
+/* ========== Рендер навыков ========== */
 
 function renderSkill(node, evaluated, path = "", level = 0) {
   if (!evaluated.visible) return [];
@@ -510,13 +661,19 @@ function renderSkill(node, evaluated, path = "", level = 0) {
   const hasChildren = evaluated.children.some(c => c.visible);
   const isExpanded  = hasChildren && expandedNodes.has(key);
 
-  // Бейдж «слабое место» — только у веток с просадкой
-  const showWeak = hasChildren && evaluated.min < evaluated.rating - WEAK_THRESHOLD;
+  // Тип решает, показывать ли бейдж слабого места
+  const typeDisplay = evaluated._typeDef?.display ?? {};
+  const showBadgeAllowed = typeDisplay.showBadge !== false;
+  // Бейдж «слабое звено» — только у листьев, которые markWeakLeaves помечает
+  const showWeak = !hasChildren
+    && evaluated.isWeak === true
+    && (evaluated._typeDef?.display?.showBadge !== false);
 
   const li = document.createElement("li");
   li.className = "skill" +
     (hasChildren ? " skill--has-children" : "") +
     (isExpanded  ? " skill--expanded"     : "");
+  li.dataset.type = evaluated._type;   // полезно для отладки и CSS-хуков
 
   let namePart;
   if (hasChildren) {
@@ -570,20 +727,15 @@ function renderSkill(node, evaluated, path = "", level = 0) {
 function buildGroupSection(group, evaluated, gi) {
   const section = document.createElement("section");
   section.className = "skills-group";
+  section.dataset.type = evaluated._type;
 
-  const stars    = ratingToStars(evaluated.rating);
-  const showWeak = evaluated.min < evaluated.rating - WEAK_THRESHOLD;
-
-  const weakBadge = showWeak
-    ? `<span class="skill-weak" title="Слабое место: ${evaluated.min.toFixed(1)} из 10">↓ ${evaluated.min.toFixed(1)}</span>`
-    : "";
+  const stars = ratingToStars(evaluated.rating);
 
   const header = document.createElement("div");
   header.className = "skills-group__header";
   header.innerHTML = `
     <h2>${group.name}</h2>
     <span class="skill-meta">
-      ${weakBadge}
       <span class="stars" style="--rating: ${stars}"
             aria-label="${evaluated.rating.toFixed(1)} из 10"></span>
     </span>
@@ -637,7 +789,7 @@ function renderSkills(evals) {
   softSections.forEach(s => wrapper.appendChild(s));
 }
 
-/* ========== Рендер навигации ========== */
+/* ========== Навигация по ролям ========== */
 
 function renderRolesNav() {
   const nav = document.getElementById("roles-nav");
@@ -745,12 +897,23 @@ function renderSummary() {
     .sort()
     .join(" + ");
 
-  let profile;
-  if (avg >= 7 && count >= 8)       profile = "Сильный широкий профиль";
-  else if (avg >= 7)                profile = "Сильный узкий профиль";
-  else if (count >= 8)              profile = "Широкий, но средний уровень";
-  else if (avg < 4)                 profile = "Базовый уровень";
-  else                              profile = "Средний профиль";
+
+  // Уровень — по среднему баллу
+  let level;
+  if (avg >= 8.5)       level = "Expert";
+  else if (avg >= 7.0)  level = "Senior";
+  else if (avg >= 5.0)  level = "Middle";
+  else if (avg >= 3.0)  level = "Junior";
+  else                  level = "Trainee";
+
+  // Охват — по количеству навыков
+  let scope;
+  if (count >= 8)       scope = "широкий";
+  else if (count >= 3)  scope = "сбалансированный";
+  else                  scope = "узкий";
+
+  // CSS-класс для цвета
+  const levelClass = "lvl-" + level.toLowerCase();
 
   box.hidden = false;
   box.innerHTML = `
@@ -775,8 +938,8 @@ function renderSummary() {
         <span class="roles-summary__metric-label">сумма баллов</span>
       </div>
       <div class="roles-summary__metric">
-        <span class="roles-summary__metric-value">${profile}</span>
-        <span class="roles-summary__metric-label">профиль</span>
+        <span class="roles-summary__metric-value ${levelClass}">${level}</span>
+        <span class="roles-summary__metric-label">${scope} профиль</span>
       </div>
     </div>
   `;
@@ -797,7 +960,8 @@ function renderRadarHint() {
 /* ========== Общий рендер ========== */
 
 function render() {
-  const evals = skillsData.map(evaluate);
+  const evals = skillsData.map(g => evaluate(g));
+  markWeakLeaves(evals);   // ← новый проход: помечаем слабые листья
 
   renderRolesNav();
   renderSummary();
@@ -812,7 +976,6 @@ function render() {
 function init() {
   readHash();
 
-  // Поиск роли
   const search = document.getElementById("roles-search");
   if (search) {
     search.addEventListener("input", (e) => {
@@ -821,13 +984,9 @@ function init() {
     });
   }
 
-  // PDF
   const printBtn = document.getElementById("print-btn");
-  if (printBtn) {
-    printBtn.addEventListener("click", () => window.print());
-  }
+  if (printBtn) printBtn.addEventListener("click", () => window.print());
 
-  // Рубрика
   const rubricBtn  = document.getElementById("rubric-toggle");
   const rubricBody = document.getElementById("rubric-body");
   if (rubricBtn && rubricBody) {
@@ -838,7 +997,6 @@ function init() {
     });
   }
 
-  // Аккордеон — делегирование
   const wrapper = document.getElementById("skills-wrapper");
   if (wrapper) {
     wrapper.addEventListener("click", (e) => {
@@ -852,11 +1010,9 @@ function init() {
     });
   }
 
-  // Тултипы радаров
   attachRadarTooltips(document.getElementById("radar-hard"));
   attachRadarTooltips(document.getElementById("radar-soft"));
 
-  // Глобальный сторож
   document.addEventListener("mousemove", (e) => {
     const el = document.getElementById("radar-tooltip");
     if (!el || el.hidden) return;
@@ -886,9 +1042,8 @@ function init() {
     if (el) el.hidden = true;
   });
 
-  // Resize — перерисовка радаров
   window.addEventListener("resize", () => {
-    const evals = skillsData.map(evaluate);
+    const evals = skillsData.map(g => evaluate(g));
     renderRadars(evals);
   });
 
