@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Roman Y."
+  <title>Мои навыки</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="layout">
+
+    <aside class="radar-panel" aria-label="Диаграммы навыков">
+      <div class="radar-block">
+        <h3>Hard skills</h3>
+        <div class="radar-canvas-wrap">
+          <canvas id="radar-hard"></canvas>
+        </div>
+      </div>
+      <div class="radar-block">
+        <h3>Soft skills</h3>
+        <div class="radar-canvas-wrap">
+          <canvas id="radar-soft"></canvas>
+        </div>
+      </div>
+      <p class="radar-panel__hint" id="radar-hint">Все навыки</p>
+    </aside>
+
+    <header class="page-header">
+      <h1>Мои навыки</h1>
+      <p class="subtitle">Что я умею и насколько хорошо</p>
+
+      <div class="rubric">
+        <button type="button" id="rubric-toggle" class="rubric-btn" aria-expanded="false">
+          Что значит оценка?
+        </button>
+<div class="rubric-body" id="rubric-body" hidden>
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th>Балл</th>
+        <th>Hard skill</th>
+        <th>Soft skill</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td>  <td>Не знаю / не слышал</td>                     <td>Не знаю / не слышал</td></tr>
+      <tr><td>1</td>  <td>Слышал термин</td>                           <td>Слышал термин</td></tr>
+      <tr><td>2</td>  <td>Понимаю идею, не практиковал</td>            <td>Понимаю идею, не практиковал</td></tr>
+      <tr><td>3</td>  <td>Пробовал по туториалу</td>                   <td>Пробовал, обычно выходит плохо</td></tr>
+      <tr><td>4</td>  <td>Простые задачи по инструкции</td>            <td>Работает в простых ситуациях</td></tr>
+      <tr><td>5</td>  <td>Типовые задачи, иногда гуглю</td>            <td>Обычно справляюсь, иногда ошибаюсь</td></tr>
+      <tr><td>6</td>  <td>Уверенно решаю типовые задачи</td>           <td>Уверенно применяю в работе</td></tr>
+      <tr><td>7</td>  <td>Сложные задачи, знаю нюансы</td>             <td>Применяю в сложных ситуациях</td></tr>
+      <tr><td>8</td>  <td>Понимаю устройство, оптимизирую</td>         <td>Обучаю других, вижу нестандартные ходы</td></tr>
+      <tr><td>9</td>  <td>Проектирую решения с нуля</td>               <td>Признан в команде как эксперт</td></tr>
+      <tr><td>10</td> <td>Эксперт: учу других, развиваю тему</td>      <td>Эксперт: развиваю практику, обучаю</td></tr>
+    </tbody>
+  </table>
+</div>
+      </div>
+
+      <div class="roles-bar">
+        <div class="roles-search-row">
+          <input
+            type="search"
+            id="roles-search"
+            class="roles-search"
+            placeholder="Поиск роли…"
+            autocomplete="off"
+          >
+          <button type="button" id="print-btn" class="print-btn" title="Сохранить в PDF">
+            ⬇ PDF
+          </button>
+        </div>
+        <nav class="roles-nav" id="roles-nav" aria-label="Фильтр по ролям"></nav>
+      </div>
+    </header>
+
+    <main class="layout__content">
+      <aside class="roles-summary" id="roles-summary" aria-live="polite" hidden></aside>
+      <div class="skills-wrapper" id="skills-wrapper"></div>
+
+      <footer class="page-footer">
+        <p>© 2026 Мой сайт-презентация</p>
+      </footer>
+    </main>
+
+  </div>
+
+  <div id="radar-tooltip" class="radar-tooltip" hidden></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
