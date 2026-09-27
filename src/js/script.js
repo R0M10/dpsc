@@ -1,9 +1,12 @@
+/// Код разнесен на множество кусков новый код запускать 
+// cd "project" --- путь к проекту
+// через python -m http.server 8000
 /* ========== Области (домены) ==========
    Добавляй сюда новые области — механизм сам подхватит. */
 const domains = {
   all: "Все области",
   it:  "IT",
-  cooking: "Кулинария",
+  //cooking: "Кулинария",
 };
 
 /* ========== Роли ========== */
@@ -16,11 +19,14 @@ const roles = {
   data:      "Data Scientist",
   office:    "Офис",
   devops:    "DevOps",
-  qa:        "QA",
+  qa:        "QA-инженер",
   pm:        "Project Manager",
   designer:  "UI/UX дизайнер",
   //cook:     "Повар",
   //souschef: "Су-шеф",
+  qc:       "QC-тестировщик",
+  qalead:   "QA Lead",       // управляет процессами, метриками, стандартами
+  sdet:     "SDET",          // QA, который пишет автоматизацию
 };
 
 /* К какому домену относится каждая роль */
@@ -35,6 +41,9 @@ const roleDomains = {
   qa:        "it",
   pm:        "it",
   designer:  "it",
+  qc:        "it",
+  qalead:    "it",
+  sdet:      "it",
   //cook:     "cooking",
   //souschef: "cooking",
 };
@@ -59,6 +68,7 @@ const skillTypes = {
   concept:   { label: "Концепт",    defaultRoles: [],           rubric: "concept",  fields: [],                         display: { showBadge: false } },
   framework: { label: "Фреймворк",  defaultRoles: ["backend"],  rubric: "library",  fields: ["version","stack"],        display: { showBadge: true  } },
   softskill: { label: "Soft skill", defaultRoles: "DOMAIN",     rubric: "soft",     fields: ["contexts"],               display: { showBadge: false } },
+  practice:  { label: "Практика",   defaultRoles: ["qa"],       rubric: "practice", fields: ["frequency"],              display: { showBadge: true  } },
 };
 
 /* ========== Данные ==========
@@ -129,11 +139,12 @@ const skillsData = [
     domain: "it", category: "hard",
     name: "Офисный пакет", short: "Офис", type: "category",
     children: [
-      { name: "Excel",       rating: 10,  type: "tool", roles: ["office", "analyst", "pm"] },
+      { name: "Excel",       rating: 9.9,  type: "tool", roles: ["office", "analyst", "pm"] },
       { name: "Word",        rating: 9,   type: "tool", roles: ["office", "pm"] },
       { name: "PowerPoint",  rating: 7,   type: "tool", roles: ["office", "pm"] },
       { name: "Project",     rating: 4,   type: "tool", roles: ["office", "pm"] },
-      { name: "Power Query", rating: 7.5, type: "tool", roles: ["office", "data"] },
+      { name: "Power Query", rating: 7.5, type: "tool", roles: ["office", "data", "analyst"] },
+      { name: "SAP",         rating: 7.1, type: "tool", roles: ["office", "pm"]}
     ],
   },
   {
@@ -158,6 +169,25 @@ const skillsData = [
       { name: "Kubernetes", rating: 1, type: "tool", roles: ["devops", "backend"] },
     ],
   },
+  {
+  name: "Тестирование и качество",
+  domain: "it", category: "hard",
+  children: [
+    // QA — процессы
+    { name: "Тест-стратегия",       rating: 2, type: "process",  roles: ["qa", "qalead"] },
+    { name: "Метрики качества",     rating: 3, type: "process",  roles: ["qalead"] },
+    { name: "Пирамида тестирования",rating: 1, type: "concept",  roles: ["qa", "qalead"] },
+
+    // QC — руки
+    { name: "Ручное тестирование",  rating: 7, type: "practice", roles: ["qa", "qc"] },
+    { name: "Регрессионное тестирование", rating: 2, type: "practice", roles: ["qa", "qc"] },
+
+    // Инструменты
+    { name: "Postman",              rating: 0, type: "tool",     roles: ["qa", "qc"] },
+    { name: "Selenium",             rating: 0, type: "tool",     roles: ["qa", "sdet"] },
+    { name: "Jira",                 rating: 5.5, type: "tool",   roles: ["qa", "qalead"] },
+  ],
+},
 
   /* ---------- SOFT ---------- */
   {
