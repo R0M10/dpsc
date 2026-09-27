@@ -712,3 +712,18 @@ body {
     print-color-adjust: exact;
   }
 }
+/* Кнопки экспорта/импорта — призрачные */
+.print-btn--ghost {
+  background: #fff;
+  color: #2f6bff;
+  border-color: #b7c8ff;
+}
+.print-btn--ghost:hover {
+  background: #f5f8ff;
+  border-color: #93aaff;
+}
+
+/* В печати — не показываем */
+@media print {
+  .print-btn--ghost { display: none !important; }
+}
