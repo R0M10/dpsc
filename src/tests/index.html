@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тесты — Мои навыки</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      line-height: 1.5;
+      padding: 2rem;
+    }
+
+    .tests-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+    }
+
+    h1 {
+      margin: 0 0 .25rem;
+      font-size: 1.5rem;
+    }
+
+    .summary {
+      margin: 0 0 1.25rem;
+      font-size: .9rem;
+      color: #666;
+    }
+    .summary strong { color: #222; }
+
+    .summary.is-pass strong.total { color: #2f8f2f; }
+    .summary.is-fail strong.total { color: #c0392b; }
+
+    .test-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+
+    .test-item {
+      display: flex;
+      gap: .75rem;
+      padding: .5rem .75rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      align-items: flex-start;
+    }
+
+    .test-item--pass {
+      background: #f0f7ee;
+      color: #2f6b2f;
+    }
+
+    .test-item--fail {
+      background: #fdecea;
+      color: #a0291d;
+    }
+
+    .test-icon {
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    .test-name {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .test-error {
+      display: block;
+      margin-top: .15rem;
+      color: #7a1d13;
+      font-size: .82rem;
+      font-weight: 400;
+    }
+
+    .test-group-title {
+      margin: 1rem 0 .35rem;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #888;
+      font-weight: 700;
+    }
+    .test-group-title:first-child { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="tests-wrap">
+    <h1>Тесты логики</h1>
+    <p class="summary" id="summary">Запуск…</p>
+    <div id="output"></div>
+  </div>
+
+  <script type="module" src="tests.js"></script>
+</body>
+</html>
