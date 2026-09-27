@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мои навыки</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <div class="layout">
 
-    <!-- Радары — динамические, JS сам построит нужные -->
     <aside class="radar-panel" aria-label="Диаграммы навыков">
       <p class="radar-panel__hint" id="radar-hint">Все навыки</p>
       <div id="radar-panel-inner" class="radar-panel__inner"></div>
@@ -34,17 +35,61 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>0</td>  <td>Не знаю / не слышал</td>              <td>Не знаю / не слышал</td></tr>
-              <tr><td>1</td>  <td>Слышал термин</td>                    <td>Слышал термин</td></tr>
-              <tr><td>2</td>  <td>Понимаю идею, не практиковал</td>     <td>Понимаю идею, не практиковал</td></tr>
-              <tr><td>3</td>  <td>Пробовал по туториалу</td>            <td>Пробовал, обычно выходит плохо</td></tr>
-              <tr><td>4</td>  <td>Простые задачи по инструкции</td>     <td>Работает в простых ситуациях</td></tr>
-              <tr><td>5</td>  <td>Типовые задачи, иногда гуглю</td>     <td>Обычно справляюсь, иногда ошибаюсь</td></tr>
-              <tr><td>6</td>  <td>Уверенно решаю типовые задачи</td>    <td>Уверенно применяю в работе</td></tr>
-              <tr><td>7</td>  <td>Сложные задачи, знаю нюансы</td>      <td>Применяю в сложных ситуациях</td></tr>
-              <tr><td>8</td>  <td>Понимаю устройство, оптимизирую</td>  <td>Обучаю других, вижу нестандартные ходы</td></tr>
-              <tr><td>9</td>  <td>Проектирую решения с нуля</td>        <td>Признан в команде как эксперт</td></tr>
-              <tr><td>10</td> <td>Эксперт: учу других, развиваю тему</td><td>Эксперт: развиваю практику, обучаю</td></tr>
+              <tr>
+                <td>0</td>
+                <td>Не знаю / не слышал</td>
+                <td>Не знаю / не слышал</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Слышал термин</td>
+                <td>Слышал термин</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Понимаю идею, не практиковал</td>
+                <td>Понимаю идею, не практиковал</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Пробовал по туториалу</td>
+                <td>Пробовал, обычно выходит плохо</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Простые задачи по инструкции</td>
+                <td>Работает в простых ситуациях</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Типовые задачи, иногда гуглю</td>
+                <td>Обычно справляюсь, иногда ошибаюсь</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Уверенно решаю типовые задачи</td>
+                <td>Уверенно применяю в работе</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Сложные задачи, знаю нюансы</td>
+                <td>Применяю в сложных ситуациях</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Понимаю устройство, оптимизирую</td>
+                <td>Обучаю других, вижу нестандартные ходы</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Проектирую решения с нуля</td>
+                <td>Признан в команде как эксперт</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Эксперт: учу других, развиваю тему</td>
+                <td>Эксперт: развиваю практику, обучаю</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -54,15 +99,12 @@
 
       <div class="roles-bar">
         <div class="roles-search-row">
-          <input
-            type="search"
-            id="roles-search"
-            class="roles-search"
-            placeholder="Поиск роли…"
-            autocomplete="off"
-          >
+          <input type="search" id="roles-search" class="roles-search" placeholder="Поиск роли…" autocomplete="off">
           <button type="button" id="print-btn" class="print-btn" title="Сохранить в PDF">
             ⬇ PDF
+          </button>
+          <button type="button" id="export-btn" class="print-btn print-btn--ghost" title="Скачать данные как JSON">
+            ⬇ JSON
           </button>
         </div>
         <nav class="roles-nav" id="roles-nav" aria-label="Фильтр по ролям"></nav>
@@ -82,6 +124,7 @@
 
   <div id="radar-tooltip" class="radar-tooltip" hidden></div>
 
-  <script src="js/script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
