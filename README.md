@@ -1,7 +1,8 @@
 # Digital Personal Skill Card
 # Цифровая карта личных компетенций
 
-[![Открыть в браузере](https://img.shields.io/badge/github-repo-blue?logo=github&style=for-the-badge)](https://r0m10.github.io/dpsc/)
+[![Открыть в браузере](https://img.shields.io/badge/github-site-blue?logo=github&style=for-the-badge)](https://r0m10.github.io/dpsc/)
+
 ![W3C Validation](https://img.shields.io/w3c-validation/html?targetUrl=https%3A%2F%2Fr0m10.github.io%2Fdpsc%2F)
 
 
