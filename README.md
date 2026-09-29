@@ -25,4 +25,4 @@ npx serve
 Установить расширение Live Server, правый клик по index.html -> Open with Live Server.
 
 Пример отображения:
-![Главная страница сайта](src/img/example.png)
+![Главная страница сайта](img/example.png)
