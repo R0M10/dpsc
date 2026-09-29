@@ -1,6 +1,6 @@
 # Digital Personal Skill Card - Цифровая карта личных компетенций
 
-[![Открыть в браузере](https://shields.io)](https://r0m10.github.io/dpsc/)
+[![Открыть в браузере](https://img.shields.io/badge/github-repo-blue?logo=github&style=for-the-badge)](https://r0m10.github.io/dpsc/)
 
 ### Концепция
 Проект представляет собой визуализацию имеющихся навыков и компетенций в виде удобной цифровой копии. 
