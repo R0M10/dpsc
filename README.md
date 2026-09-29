@@ -1,4 +1,5 @@
-# Digital Personal Skill Card - Цифровая карта личных компетенций
+# Digital Personal Skill Card
+# Цифровая карта личных компетенций
 
 [![Открыть в браузере](https://img.shields.io/badge/github-repo-blue?logo=github&style=for-the-badge)](https://r0m10.github.io/dpsc/)
 
@@ -9,7 +10,7 @@
 * **Печать:** Возможность экспорта и вывода на печать в удобной форме (PDF, принтер).
 
 ### Стек технологий (Tech Stack)
-* **Frontend:** HTML5, CSS3, JavaScript (Vanilla ES-Modules)
+* **Frontend:** ![HTML5](https://shields.io), CSS3, JavaScript (Vanilla ES-Modules)
 * **Архитектура:** Модульная структура (разнесение логики UI и ядра)
 * **Тестирование:** Собственная система тестов для проверки целостности сайта (`/tests`)
 
